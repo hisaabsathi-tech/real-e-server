@@ -1,0 +1,2513 @@
+{
+	"info": {
+		"_postman_id": "8f92ab96-6d30-4231-bd7d-de04911c052e",
+		"name": "Real Estate API",
+		"description": "Complete API collection for Real Estate backend with authentication and CRUD operations for all resources",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29568838",
+		"_collection_link": "https://orange-water-547781.postman.co/workspace/Default-workspace~b0c55518-d909-4641-8c2a-980fcd478fbb/collection/29568838-8f92ab96-6d30-4231-bd7d-de04911c052e?action=share&source=collection_link&creator=29568838"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Login User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+											"if (setCookieHeader) {",
+											"    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+											"    if (tokenMatch) {",
+											"        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/user/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+											"if (setCookieHeader) {",
+											"    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+											"    if (tokenMatch) {",
+											"        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/user/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"otp\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/user/verify",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"verify"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resend Otp",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"atmajoc@gmail.com\",\n  \"password\": \"password123\", // If agent password null, set by admin dashboard\n  \"role\": \"AGENT\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/user/resend",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"user",
+										"resend"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"atmajoc@gmail.com\",\n  \"password\": \"password123\", // If agent password null, set by admin dashboard\n  \"role\": \"AGENT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/users/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Register Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+											"if (setCookieHeader) {",
+											"    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+											"    if (tokenMatch) {",
+											"        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"atmajoc@gmail.com\",\n  \"password\": \"password123\", // If agent password null, set by admin dashboard\n  \"role\": \"AGENT\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+											"if (setCookieHeader) {",
+											"    const tokenMatch = setCookieHeader.match(/token=([^;]+)/);",
+											"    if (tokenMatch) {",
+											"        pm.collectionVariables.set('authToken', tokenMatch[1]);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"Admin@123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/reset",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"reset"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Agent",
+			"item": [
+				{
+					"name": "Query",
+					"item": [
+						{
+							"name": "Add Query",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "token={{authToken}}",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"atmajo\",\n    \"email\": \"atmajoc@gmail.com\",\n    \"phone\": \"6291240981\",\n    \"message\": \"Hello please make me agent\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/agent/query",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"agent",
+										"query"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Queries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/agent/query?page=1&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"agent",
+										"query"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"description": "default 1"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "default 10"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/agent/query?page=1&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"agent",
+												"query"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"description": "default 1"
+												},
+												{
+													"key": "limit",
+													"value": "10",
+													"description": "default 10"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "498"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"1f2-mbGZ5IgRBWW6MIoYJ6NG8Lc1D00\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 03 Aug 2025 16:50:02 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 1,\n    \"totalItems\": 2,\n    \"items\": [\n        {\n            \"id\": \"cmdvug1sr0000cr34jlgfv73y\",\n            \"name\": \"Suman Mondal\",\n            \"phone\": \"9832800571\",\n            \"email\": \"mondalsumanrock20@gmail.com\",\n            \"message\": \"hello welcome\",\n            \"createdAt\": \"2025-08-03T15:36:09.224Z\",\n            \"updatedAt\": \"2025-08-03T15:36:09.224Z\"\n        },\n        {\n            \"id\": \"cmdvtumva0000ulut5ytxtek8\",\n            \"name\": \"atmajo\",\n            \"phone\": \"6291240981\",\n            \"email\": \"atmajoc@gmail.com\",\n            \"message\": \"Hello please make me agent\",\n            \"createdAt\": \"2025-08-03T15:19:30.119Z\",\n            \"updatedAt\": \"2025-08-03T15:19:30.119Z\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Get Query By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/agent/query/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"agent",
+										"query",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "cmdvug1sr0000cr34jlgfv73y"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/agent/query/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"agent",
+												"query",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "cmdvug1sr0000cr34jlgfv73y"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "228"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"e4-qolj1VbUZVkcyva9rcrf1mLJriA\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 03 Aug 2025 16:50:41 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": \"cmdvug1sr0000cr34jlgfv73y\",\n        \"name\": \"Suman Mondal\",\n        \"phone\": \"9832800571\",\n        \"email\": \"mondalsumanrock20@gmail.com\",\n        \"message\": \"hello welcome\",\n        \"createdAt\": \"2025-08-03T15:36:09.224Z\",\n        \"updatedAt\": \"2025-08-03T15:36:09.224Z\"\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get Agents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/agent/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"agent",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Cookie",
+										"value": "token={{authToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/agent",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"agent"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "282"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"11a-YitDkH9uGUOmPGCrucd7tABtbnc\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Aug 2025 16:48:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"page\": 1,\n    \"limit\": 10,\n    \"totalPages\": 1,\n    \"totalItems\": 1,\n    \"items\": [\n        {\n            \"id\": \"cmdtxm8sh0000ulyytfayopzh\",\n            \"name\": \"Agent atmajo\",\n            \"email\": \"atmajoc@gmail.com\",\n            \"password\": \"\",\n            \"role\": \"AGENT\",\n            \"otp\": null,\n            \"otpExpires\": null,\n            \"createdAt\": \"2025-08-02T07:29:24.737Z\",\n            \"updatedAt\": \"2025-08-02T07:29:24.737Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Resend Verification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"\",\n    \"email\": \"\",\n    \"role\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/agent/resend-verification",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"agent",
+								"resend-verification"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Developers",
+			"item": [
+				{
+					"name": "Get All Developers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/developers?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"developers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Developer by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/developers/{{developerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"developers",
+								"{{developerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Developer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"logo\": \"hello\",\n    \"name\": \"Emirates Hills Developer\",\n    \"description\": \"Emirates Hills Developer is a leading real estate development company specializing in luxury residential and commercial properties. With over 20 years of experience in the industry, we are committed to delivering exceptional quality and innovative designs that exceed our clients' expectations.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/developers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"developers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Developer",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"logo\": \"\",\n    \"name\": \"Updated Developer Name\",\n    \"description\": \"Updated description with more than 100 characters to meet the validation requirements for developer description field.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/developers/{{developerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"developers",
+								"{{developerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Developer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/developers/{{developerId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"developers",
+								"{{developerId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Areas",
+			"item": [
+				{
+					"name": "Get All Areas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWRuOWg5aDQwMDAwdWxwOTk5MnUzYjg3IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTQwNDk5MjgsImV4cCI6MTc1NjY0MTkyOH0.qRf7B7rrSCkB74LxFTwR1lkW-bLnpTNdr12eEiskvdI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/areas?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"areas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Area by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWRuOWg5aDQwMDAwdWxwOTk5MnUzYjg3IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTQwNDk5MjgsImV4cCI6MTc1NjY0MTkyOH0.qRf7B7rrSCkB74LxFTwR1lkW-bLnpTNdr12eEiskvdI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/areas/{{areaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"areas",
+								"{{areaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Area",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWRuOWg5aDQwMDAwdWxwOTk5MnUzYjg3IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTQwNDk5MjgsImV4cCI6MTc1NjY0MTkyOH0.qRf7B7rrSCkB74LxFTwR1lkW-bLnpTNdr12eEiskvdI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dubai Marina\",\n    \"image\": [\n        \"https://images.pexels.com/photos/3763190/pexels-photo-3763190.jpeg\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/areas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Area",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Downtown Dubai\",\n  \"image\": [\"\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/areas/{{areaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"areas",
+								"{{areaId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Area",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/areas/{{areaId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"areas",
+								"{{areaId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Communities",
+			"item": [
+				{
+					"name": "Get All Communities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/communities?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"communities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Community by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/communities/{{communityId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"communities",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Community",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jumeirah Beach Residence\",\n  \"description\": \"A beachfront residential community with modern amenities\",\n  \"areaId\": \"{{areaId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/communities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"communities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Community",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Community Name\",\n  \"description\": \"Updated community description\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/communities/{{communityId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"communities",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Community",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/communities/{{communityId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"communities",
+								"{{communityId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Plans",
+			"item": [
+				{
+					"name": "Get All Payment Plans",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payment-plans?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment-plans"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Plan by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payment-plans/{{paymentPlanId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment-plans",
+								"{{paymentPlanId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment Plan",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"80/20 Payment Plan\",\n  \"value\": \"80% on handover, 20% down payment\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/payment-plans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Payment Plan",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"90/10 Payment Plan\",\n  \"value\": \"90% on handover, 10% down payment\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/payment-plans/{{paymentPlanId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment-plans",
+								"{{paymentPlanId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payment Plan",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/payment-plans/{{paymentPlanId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"payment-plans",
+								"{{paymentPlanId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Properties",
+			"item": [
+				{
+					"name": "Get All Properties",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/properties?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Properties with Filters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/properties?sort=&status=&type=&isFeatured=&developerId=&communityId=&areaId=&minPrice=&maxPrice=&minSize=&maxSize=&beds=&baths=&property_type=&property_status=&popular_features=&community_features=&interior_features=&parking_features=&view=&heating=&financial_information=&home_style=&heating_features=&property_subtypes=&lot_features=&pool_features=&green_features=&stories=&exterior_features=&property_features=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "",
+									"description": "asc | desc"
+								},
+								{
+									"key": "status",
+									"value": ""
+								},
+								{
+									"key": "type",
+									"value": ""
+								},
+								{
+									"key": "isFeatured",
+									"value": ""
+								},
+								{
+									"key": "developerId",
+									"value": ""
+								},
+								{
+									"key": "communityId",
+									"value": ""
+								},
+								{
+									"key": "areaId",
+									"value": ""
+								},
+								{
+									"key": "minPrice",
+									"value": ""
+								},
+								{
+									"key": "maxPrice",
+									"value": ""
+								},
+								{
+									"key": "minSize",
+									"value": ""
+								},
+								{
+									"key": "maxSize",
+									"value": ""
+								},
+								{
+									"key": "beds",
+									"value": ""
+								},
+								{
+									"key": "baths",
+									"value": ""
+								},
+								{
+									"key": "property_type",
+									"value": ""
+								},
+								{
+									"key": "property_status",
+									"value": ""
+								},
+								{
+									"key": "popular_features",
+									"value": ""
+								},
+								{
+									"key": "community_features",
+									"value": ""
+								},
+								{
+									"key": "interior_features",
+									"value": ""
+								},
+								{
+									"key": "parking_features",
+									"value": ""
+								},
+								{
+									"key": "view",
+									"value": ""
+								},
+								{
+									"key": "heating",
+									"value": ""
+								},
+								{
+									"key": "financial_information",
+									"value": ""
+								},
+								{
+									"key": "home_style",
+									"value": ""
+								},
+								{
+									"key": "heating_features",
+									"value": ""
+								},
+								{
+									"key": "property_subtypes",
+									"value": ""
+								},
+								{
+									"key": "lot_features",
+									"value": ""
+								},
+								{
+									"key": "pool_features",
+									"value": ""
+								},
+								{
+									"key": "green_features",
+									"value": ""
+								},
+								{
+									"key": "stories",
+									"value": ""
+								},
+								{
+									"key": "exterior_features",
+									"value": ""
+								},
+								{
+									"key": "property_features",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Property by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties",
+								"{{propertyId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Property",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"areaId\": \"{{areaId}}\",\n  \"developerId\": \"{{developerId}}\",\n  \"communityId\": \"{{communityId}}\",\n  \"images\": [\n    \"https://example.com/image1.jpg\",\n    \"https://example.com/image2.jpg\"\n  ],\n  \"name\": \"Luxury Marina Apartment\",\n  \"overview\": \"A stunning 2-bedroom apartment with marina views and modern amenities\",\n  \"status\": \"Ready_To_Move\",\n  \"type\": \"Apartments\",\n  \"isFeatured\": true,\n  \"accommodation\": \"\",\n  \"possession\": \"Ready\",\n  \"size\": 1200,\n  \"downPayment\": 250000,\n  \"paymentPlanId\": \"{{paymentPlanId}}\",\n  \"handover\": \"2024-12-31T00:00:00.000Z\",\n  \"featureAmenitiesId\": \"{{featureAmenityId}}\",\n  \"brochure\": \"https://example.com/brochure.pdf\",\n  \"floorPlanBrochure\": \"https://example.com/floor-plan.pdf\",\n  \"paymentPlanBrochure\": \"https://example.com/payment-plan.pdf\",\n  \"price\": 1500000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/properties",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Property",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Property Name\",\n  \"price\": 1750000,\n  \"isFeatured\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties",
+								"{{propertyId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Property",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/properties/{{propertyId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"properties",
+								"{{propertyId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Property Contacts",
+			"item": [
+				{
+					"name": "Get All Property Contacts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Property Contacts by Property ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts?propertyId={{propertyId}}&page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts"
+							],
+							"query": [
+								{
+									"key": "propertyId",
+									"value": "{{propertyId}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Property Contact by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts/{{propertyContactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts",
+								"{{propertyContactId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Property Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"name\": \"John Doe\",\n  \"phone\": \"+971501234567\",\n  \"email\": \"john.doe@example.com\",\n  \"type\": \"Individual\",\n  \"message\": \"I am interested in this property and would like more information.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Property Contact",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Smith\",\n  \"type\": \"Agent\",\n  \"message\": \"Updated message with additional requirements.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts/{{propertyContactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts",
+								"{{propertyContactId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Property Contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/property-contacts/{{propertyContactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"property-contacts",
+								"{{propertyContactId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "Get All Contacts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contact by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								"{{contactId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contact",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jane Smith\",\n  \"phone\": \"+971507654321\",\n  \"email\": \"jane.smith@example.com\",\n  \"message\":\"hello world\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Contact",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jane Doe\",\n  \"phone\": \"+971501112233\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								"{{contactId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contact",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								"{{contactId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collections",
+			"item": [
+				{
+					"name": "Get User Collections",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/collections?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"collections"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Collection by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/collections/{{collectionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"collections",
+								"{{collectionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Property to Collection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"propertyId\": \"{{propertyId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/collections",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"collections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Property from Collection",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/collections/{{collectionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"collections",
+								"{{collectionId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Request Tours",
+			"item": [
+				{
+					"name": "Get User Request Tours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/request-tours?page=1&limit=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"request-tours"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Request Tour by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/request-tours/{{requestTourId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"request-tours",
+								"{{requestTourId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Request Tour",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"mode\": \"OFFLINE\",\n  \"timeframe\": \"MORNING\",\n  \"name\": \"Alice Johnson\",\n  \"email\": \"alice.johnson@example.com\",\n  \"message\": \"I would like to schedule a tour of this property this weekend.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/request-tours",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"request-tours"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Request Tour",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mode\": \"ONLINE\",\n  \"timeframe\": \"AFTERNOON\",\n  \"message\": \"Updated: I prefer an online tour in the afternoon.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/request-tours/{{requestTourId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"request-tours",
+								"{{requestTourId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request Tour",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/request-tours/{{requestTourId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"request-tours",
+								"{{requestTourId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "File Router",
+			"item": [
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"/home/atmajo/Pictures/Screenshots/Screenshot From 2025-07-28 11-03-37.png",
+										"/home/atmajo/Pictures/Screenshots/Screenshot From 2025-08-02 10-02-41.png",
+										"/home/atmajo/Pictures/Screenshots/Screenshot From 2025-08-02 23-37-34.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/file/upload",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/file/download",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"download"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/file/delete",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Logs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/logs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"logs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "developerId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "areaId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "communityId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accommodationId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "possessionId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "paymentPlanId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "featureAmenityId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "propertyId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "propertyContactId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "contactId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "collectionId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "requestTourId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

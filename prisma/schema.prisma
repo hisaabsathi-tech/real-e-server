@@ -112,7 +112,7 @@ model User {
   alerts          Alert[]
   MakeOffer       MakeOffer[]
   propertyContact PropertyContact[]
-  
+
   @@map("user")
 }
 

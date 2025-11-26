@@ -7,4 +7,3 @@ dist
 uploads
 package-lock.json
 test*
-*.json
