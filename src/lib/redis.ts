@@ -6,12 +6,9 @@ const CACHE_TTL = 3600;
 const PROPERTY_INDEX = "properties_idx";
 const SEARCH_CACHE_PREFIX = "search_cache:";
 
-export const redis = new Redis({
-  host: "localhost",
-  port: 6379,
-  maxRetriesPerRequest: 3,
-  lazyConnect: true,
-});
+export const redis = new Redis(
+  "rediss://default:AaLwAAIncDIxOTAzNjJjYTdlM2Q0OTZmOWQyYmE1MzVkM2ZiMmUxNHAyNDE3MTI@measured-tick-41712.upstash.io:6379"
+);
 
 interface PropertySearchOptions {
   query?: string;
@@ -49,8 +46,8 @@ interface PropertySearchOptions {
     radius?: number;
   };
   sort?: {
-    by?: 'price' | 'createdAt' | 'name' | '_score';
-    order?: 'ASC' | 'DESC';
+    by?: "price" | "createdAt" | "name" | "_score";
+    order?: "ASC" | "DESC";
   };
   offset?: number;
   limit?: number;
@@ -69,49 +66,103 @@ export const createPropertySearchIndex = async (): Promise<void> => {
     await redis.call(
       "FT.CREATE",
       PROPERTY_INDEX,
-      "ON", "HASH",
-      "PREFIX", "1", "property:",
+      "ON",
+      "HASH",
+      "PREFIX",
+      "1",
+      "property:",
       "SCHEMA",
-      "name", "TEXT", "WEIGHT", "2.0", "SORTABLE",
-      "overview", "TEXT", "WEIGHT", "1.5",
-      "area_name", "TEXT", "WEIGHT", "1.0",
-      "developer_name", "TEXT", "WEIGHT", "1.0",
-      "community_name", "TEXT", "WEIGHT", "1.0",
-      
-      "status", "TAG", "SORTABLE",
-      "type", "TAG", "SORTABLE",
-      "beds", "TAG",
-      "baths", "TAG",
-      "areaId", "TAG",
-      "developerId", "TAG",
-      "communityId", "TAG",
-      "userId", "TAG",
-      
-      "price", "NUMERIC", "SORTABLE",
-      "lat", "NUMERIC",
-      "long", "NUMERIC",
-      "createdAt", "NUMERIC", "SORTABLE",
-      
-      "isFeatured", "TAG",
-      
-      "property_type", "TAG",
-      "property_status", "TAG",
-      "popular_features", "TAG",
-      "community_features", "TAG",
-      "interior_features", "TAG",
-      "parking_features", "TAG",
-      "view", "TAG",
-      "heating", "TAG",
-      "financial_information", "TAG",
-      "home_style", "TAG",
-      "heating_features", "TAG",
-      "property_subtypes", "TAG",
-      "lot_features", "TAG",
-      "pool_features", "TAG",
-      "green_features", "TAG",
-      "stories", "TAG",
-      "exterior_features", "TAG",
-      "property_features", "TAG"
+      "name",
+      "TEXT",
+      "WEIGHT",
+      "2.0",
+      "SORTABLE",
+      "overview",
+      "TEXT",
+      "WEIGHT",
+      "1.5",
+      "area_name",
+      "TEXT",
+      "WEIGHT",
+      "1.0",
+      "developer_name",
+      "TEXT",
+      "WEIGHT",
+      "1.0",
+      "community_name",
+      "TEXT",
+      "WEIGHT",
+      "1.0",
+
+      "status",
+      "TAG",
+      "SORTABLE",
+      "type",
+      "TAG",
+      "SORTABLE",
+      "beds",
+      "TAG",
+      "baths",
+      "TAG",
+      "areaId",
+      "TAG",
+      "developerId",
+      "TAG",
+      "communityId",
+      "TAG",
+      "userId",
+      "TAG",
+
+      "price",
+      "NUMERIC",
+      "SORTABLE",
+      "lat",
+      "NUMERIC",
+      "long",
+      "NUMERIC",
+      "createdAt",
+      "NUMERIC",
+      "SORTABLE",
+
+      "isFeatured",
+      "TAG",
+
+      "property_type",
+      "TAG",
+      "property_status",
+      "TAG",
+      "popular_features",
+      "TAG",
+      "community_features",
+      "TAG",
+      "interior_features",
+      "TAG",
+      "parking_features",
+      "TAG",
+      "view",
+      "TAG",
+      "heating",
+      "TAG",
+      "financial_information",
+      "TAG",
+      "home_style",
+      "TAG",
+      "heating_features",
+      "TAG",
+      "property_subtypes",
+      "TAG",
+      "lot_features",
+      "TAG",
+      "pool_features",
+      "TAG",
+      "green_features",
+      "TAG",
+      "stories",
+      "TAG",
+      "exterior_features",
+      "TAG",
+      "property_features",
+      "TAG"
     );
 
     logger.info("Property search index created successfully");
@@ -124,7 +175,7 @@ export const createPropertySearchIndex = async (): Promise<void> => {
 export const indexProperty = async (property: any): Promise<void> => {
   try {
     const propertyKey = `property:${property.id}`;
-    
+
     const indexData: Record<string, any> = {
       name: property.name || "",
       overview: property.overview || "",
@@ -147,14 +198,27 @@ export const indexProperty = async (property: any): Promise<void> => {
     };
 
     const arrayFields = [
-      'property_type', 'property_status', 'popular_features', 'community_features',
-      'interior_features', 'parking_features', 'view', 'heating',
-      'financial_information', 'home_style', 'heating_features', 'property_subtypes',
-      'lot_features', 'pool_features', 'green_features', 'stories',
-      'exterior_features', 'property_features'
+      "property_type",
+      "property_status",
+      "popular_features",
+      "community_features",
+      "interior_features",
+      "parking_features",
+      "view",
+      "heating",
+      "financial_information",
+      "home_style",
+      "heating_features",
+      "property_subtypes",
+      "lot_features",
+      "pool_features",
+      "green_features",
+      "stories",
+      "exterior_features",
+      "property_features",
     ];
 
-    arrayFields.forEach(field => {
+    arrayFields.forEach((field) => {
       if (property[field] && Array.isArray(property[field])) {
         indexData[field] = property[field].join("|");
       } else {
@@ -169,14 +233,15 @@ export const indexProperty = async (property: any): Promise<void> => {
 
     await redis.hmset(propertyKey, ...hashData);
     await redis.expire(propertyKey, CACHE_TTL * 24);
-    
   } catch (error) {
     logger.error(`Failed to index property ${property.id}:`, error);
     throw error;
   }
 };
 
-export const removePropertyFromIndex = async (propertyId: string): Promise<void> => {
+export const removePropertyFromIndex = async (
+  propertyId: string
+): Promise<void> => {
   try {
     await redis.del(`property:${propertyId}`);
   } catch (error) {
@@ -187,10 +252,12 @@ export const removePropertyFromIndex = async (propertyId: string): Promise<void>
 
 const buildSearchQuery = (options: PropertySearchOptions): string => {
   const queryParts: string[] = [];
-  
+
   if (options.query && options.query.trim()) {
     const cleanQuery = options.query.replace(/[^a-zA-Z0-9\s]/g, "");
-    queryParts.push(`(name:${cleanQuery}* | overview:${cleanQuery}* | area_name:${cleanQuery}* | developer_name:${cleanQuery}* | community_name:${cleanQuery}*)`);
+    queryParts.push(
+      `(name:${cleanQuery}* | overview:${cleanQuery}* | area_name:${cleanQuery}* | developer_name:${cleanQuery}* | community_name:${cleanQuery}*)`
+    );
   }
 
   if (options.filters) {
@@ -199,27 +266,27 @@ const buildSearchQuery = (options: PropertySearchOptions): string => {
     if (filters.status && filters.status.length > 0) {
       queryParts.push(`@status:{${filters.status.join("|")}}`);
     }
-    
+
     if (filters.type && filters.type.length > 0) {
       queryParts.push(`@type:{${filters.type.join("|")}}`);
     }
-    
+
     if (filters.beds && filters.beds.length > 0) {
       queryParts.push(`@beds:{${filters.beds.join("|")}}`);
     }
-    
+
     if (filters.baths && filters.baths.length > 0) {
       queryParts.push(`@baths:{${filters.baths.join("|")}}`);
     }
-    
+
     if (filters.areaId && filters.areaId.length > 0) {
       queryParts.push(`@areaId:{${filters.areaId.join("|")}}`);
     }
-    
+
     if (filters.developerId && filters.developerId.length > 0) {
       queryParts.push(`@developerId:{${filters.developerId.join("|")}}`);
     }
-    
+
     if (filters.communityId && filters.communityId.length > 0) {
       queryParts.push(`@communityId:{${filters.communityId.join("|")}}`);
     }
@@ -235,23 +302,43 @@ const buildSearchQuery = (options: PropertySearchOptions): string => {
     }
 
     const multiValueFields = [
-      'property_type', 'property_status', 'popular_features', 'community_features',
-      'interior_features', 'parking_features', 'view', 'heating',
-      'financial_information', 'home_style', 'heating_features', 'property_subtypes',
-      'lot_features', 'pool_features', 'green_features', 'stories',
-      'exterior_features', 'property_features'
+      "property_type",
+      "property_status",
+      "popular_features",
+      "community_features",
+      "interior_features",
+      "parking_features",
+      "view",
+      "heating",
+      "financial_information",
+      "home_style",
+      "heating_features",
+      "property_subtypes",
+      "lot_features",
+      "pool_features",
+      "green_features",
+      "stories",
+      "exterior_features",
+      "property_features",
     ];
 
-    multiValueFields.forEach(field => {
-      if (filters[field as keyof typeof filters] && Array.isArray(filters[field as keyof typeof filters])) {
+    multiValueFields.forEach((field) => {
+      if (
+        filters[field as keyof typeof filters] &&
+        Array.isArray(filters[field as keyof typeof filters])
+      ) {
         const values = filters[field as keyof typeof filters] as string[];
         if (values.length > 0) {
           queryParts.push(`@${field}:{${values.join("|")}}`);
         }
       }
     });
-    
-    if (filters.lat !== undefined && filters.long !== undefined && filters.radius !== undefined) {
+
+    if (
+      filters.lat !== undefined &&
+      filters.long !== undefined &&
+      filters.radius !== undefined
+    ) {
       // Note: RedisSearch doesn't have built-in geo support like this
       // You'd need to implement distance calculation in post-processing
       // or use a different approach like geo hashing
@@ -261,10 +348,12 @@ const buildSearchQuery = (options: PropertySearchOptions): string => {
   return queryParts.length > 0 ? queryParts.join(" ") : "*";
 };
 
-export const searchProperties = async (options: PropertySearchOptions = {}): Promise<any> => {
+export const searchProperties = async (
+  options: PropertySearchOptions = {}
+): Promise<any> => {
   try {
     const cacheKey = `${SEARCH_CACHE_PREFIX}${JSON.stringify(options)}`;
-    
+
     const cachedResult = await redis.get(cacheKey);
     if (cachedResult) {
       logger.info("Returning cached search result");
@@ -274,9 +363,19 @@ export const searchProperties = async (options: PropertySearchOptions = {}): Pro
     const query = buildSearchQuery(options);
     const offset = options.offset || 0;
     const limit = Math.min(options.limit || 20, MAX_SEARCH_RESULTS);
-    
-    const results = await redis.call("FT.SEARCH", PROPERTY_INDEX, query, "LIMIT", String(offset), String(limit), ...(options.sort?.by ? ["SORTBY", options.sort.by, options.sort.order || "DESC"] : [])) as any[];
-    
+
+    const results = (await redis.call(
+      "FT.SEARCH",
+      PROPERTY_INDEX,
+      query,
+      "LIMIT",
+      String(offset),
+      String(limit),
+      ...(options.sort?.by
+        ? ["SORTBY", options.sort.by, options.sort.order || "DESC"]
+        : [])
+    )) as any[];
+
     if (!results || results.length < 1) {
       return { total: 0, properties: [] };
     }
@@ -287,54 +386,75 @@ export const searchProperties = async (options: PropertySearchOptions = {}): Pro
     for (let i = 1; i < results.length; i += 2) {
       const key = results[i];
       const fields = results[i + 1];
-      
+
       if (fields && Array.isArray(fields)) {
-        const property: any = { id: key.replace('property:', '') };
-        
+        const property: any = { id: key.replace("property:", "") };
+
         for (let j = 0; j < fields.length; j += 2) {
           const fieldName = fields[j];
           let fieldValue = fields[j + 1];
-          
-          if (['property_type', 'property_status', 'popular_features', 'community_features',
-               'interior_features', 'parking_features', 'view', 'heating',
-               'financial_information', 'home_style', 'heating_features', 'property_subtypes',
-               'lot_features', 'pool_features', 'green_features', 'stories',
-               'exterior_features', 'property_features'].includes(fieldName)) {
-            fieldValue = fieldValue ? fieldValue.split('|').filter(Boolean) : [];
+
+          if (
+            [
+              "property_type",
+              "property_status",
+              "popular_features",
+              "community_features",
+              "interior_features",
+              "parking_features",
+              "view",
+              "heating",
+              "financial_information",
+              "home_style",
+              "heating_features",
+              "property_subtypes",
+              "lot_features",
+              "pool_features",
+              "green_features",
+              "stories",
+              "exterior_features",
+              "property_features",
+            ].includes(fieldName)
+          ) {
+            fieldValue = fieldValue
+              ? fieldValue.split("|").filter(Boolean)
+              : [];
           }
-          
-          if (['price', 'lat', 'long', 'createdAt'].includes(fieldName)) {
+
+          if (["price", "lat", "long", "createdAt"].includes(fieldName)) {
             fieldValue = parseFloat(fieldValue) || 0;
           }
-          
-          if (['isFeatured'].includes(fieldName)) {
-            fieldValue = fieldValue === 'true';
+
+          if (["isFeatured"].includes(fieldName)) {
+            fieldValue = fieldValue === "true";
           }
-          
+
           property[fieldName] = fieldValue;
         }
-        
+
         properties.push(property);
       }
     }
 
     const result = { total, properties };
-    
+
     await redis.setex(cacheKey, CACHE_TTL, JSON.stringify(result));
 
     logger.info(`Search completed: ${total} properties found`);
     return result;
-
   } catch (error) {
     logger.error("Property search failed:", error);
     throw new Error("Search operation failed");
   }
 };
 
-export const autocompleteProperties = async (query: string, limit: number = 10): Promise<string[]> => {
+export const autocompleteProperties = async (
+  query: string,
+  limit: number = 10
+): Promise<string[]> => {
   try {
     const cacheKey = `${SEARCH_CACHE_PREFIX}autocomplete:${query}:${limit}`;
-    
+
     const cachedResult = await redis.get(cacheKey);
     if (cachedResult) {
       return JSON.parse(cachedResult);
@@ -343,16 +463,20 @@ export const autocompleteProperties = async (query: string, limit: number = 10):
     const cleanQuery = query.replace(/[^a-zA-Z0-9\s]/g, "");
     const searchQuery = `name:${cleanQuery}*`;
 
-    const results = await redis.call(
+    const results = (await redis.call(
       "FT.SEARCH",
       PROPERTY_INDEX,
       searchQuery,
-      "LIMIT", "0", String(limit),
-      "RETURN", "1", "name"
-    ) as any[];
+      "LIMIT",
+      "0",
+      String(limit),
+      "RETURN",
+      "1",
+      "name"
+    )) as any[];
 
     const suggestions: string[] = [];
-    
+
     for (let i = 1; i < results.length; i += 2) {
       const fields = results[i + 1];
       if (fields && Array.isArray(fields) && fields.length >= 2) {
@@ -391,7 +515,10 @@ export const getSearchStats = async (): Promise<any> => {
   }
 };
 
-export const performSearch = async (indexName: string = PROPERTY_INDEX, query: string = "*"): Promise<any> => {
+export const performSearch = async (
+  indexName: string = PROPERTY_INDEX,
+  query: string = "*"
+): Promise<any> => {
   try {
     const results = await redis.call("FT.SEARCH", indexName, query);
     return results;

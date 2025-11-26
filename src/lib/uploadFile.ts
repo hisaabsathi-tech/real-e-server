@@ -1,42 +1,87 @@
-import path from "path";
-import { hashFile } from "./hashFile";
-import { Storage } from "@google-cloud/storage";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const uploadFile = async (
-  file: any,
-  email: string
-): Promise<{ s3FileUrl: string }> => {
+import logger from "@/logger/logger";
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY!,
+    secretAccessKey: process.env.AWS_SECRET_KEY!,
+  },
+});
+
+export async function getObjectSignedUrl(key: any) {
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME!,
+    Key: key,
+  };
+  const command = new GetObjectCommand(params);
+  const seconds = 60 * 60 * 24 * 7; // 7 days
+  const url = await getSignedUrl(s3Client, command, { expiresIn: seconds });
+
+  return url;
+}
+
+export function getPermanentUrl(key: string) {
+  return `https://${process.env.AWS_BUCKET_NAME!}.s3.${process.env
+    .AWS_REGION!}.amazonaws.com/${key}`;
+}
+
+export async function uploadFile({
+  fileBuffer,
+  fileName,
+  mimetype,
+  folderName,
+  orgName,
+}: {
+  fileBuffer: Buffer;
+  fileName: string;
+  mimetype: string;
+  folderName: string;
+  orgName?: string;
+}) {
   try {
-    const key = await hashFile(file.path, "sha256");
+    const fileKey = `${folderName}/${orgName ? orgName + "/" : ""}${fileName}`;
 
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID!;
-    const keyFilePath = "/home/atmajo/Desktop/projects/times-real-estate/storied-glazing-473717-j6-758f24562994.json";
-    
-    const storage = new Storage({
-      projectId: projectId,
-      keyFilename: keyFilePath,
-    });
-    
-    const bucket = process.env.GOOGLE_CLOUD_BUCKET_NAME!;
-
-    const folderName = email.replace(/[^\w.-]/g, "_").toLowerCase();
-
-    const fileName = `${Date.now()}-${path.basename(key)}`
-      .trim()
-      .replace(/\s+/g, "_");
-
-    const fileKey = `${folderName}/${fileName}`;
-
-    const options = {
-      destination: fileKey,
+    const uploadParams = {
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Body: fileBuffer,
+      Key: fileKey,
+      ContentType: mimetype,
     };
 
-    await storage.bucket(bucket).upload(file.path, options);
+    await s3Client.send(new PutObjectCommand(uploadParams));
+
+    const presignedUrl = await getObjectSignedUrl(fileKey);
+    const permanentUrl = getPermanentUrl(fileKey);
 
     return {
-      s3FileUrl: `https://storage.googleapis.com/${bucket}/${fileKey}`,
+      imageKey: fileKey,
+      presignedUrl,
+      permanentUrl,
     };
   } catch (error) {
-    throw error;
+    return { success: false, message: "File upload to S3 failed" };
   }
-};
+}
+
+export async function deleteFile({ fileKey }: { fileKey: string }) {
+  try {
+    const deleteParams = {
+      Bucket: process.env.AWS_BUCKET_NAME!,
+      Key: fileKey,
+    };
+
+    await s3Client.send(new DeleteObjectCommand(deleteParams));
+    return { success: true, message: "File deleted successfully" };
+  } catch (error) {
+    logger.error("Error deleting file from S3:", error);
+    return { success: false, message: "Failed to delete file from S3" };
+  }
+}

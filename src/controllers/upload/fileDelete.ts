@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { uploadFile } from "@/lib/uploadFile";
 import logger from "@/logger/logger";
 import fs from "fs/promises";
-import { deleteFile } from "@/lib/deleteFile";
+import { deleteFile } from "@/lib/uploadFile";
 
 export const fileDelete = async (req: Request, res: Response) => {
   if (!req.user) {
@@ -11,7 +11,9 @@ export const fileDelete = async (req: Request, res: Response) => {
 
   try {
     const { fileUrl } = req.body;
-    const { success, message } = await deleteFile(fileUrl as string);
+    const { success, message } = await deleteFile({
+      fileKey: fileUrl as string,
+    });
 
     if (!success) {
       return res.status(500).json({ message: "File delete failed" });
