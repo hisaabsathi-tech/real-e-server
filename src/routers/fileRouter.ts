@@ -8,6 +8,6 @@ const router = Router();
 const upload = multer({ dest: "uploads/" });
 
 router.post("/upload", upload.array("files"), fileUpload);
-router.post("/delete", fileDelete);
+router.delete("/delete", fileDelete);
 
 export { router as fileRouter };
