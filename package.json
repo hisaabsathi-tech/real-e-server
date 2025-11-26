@@ -7,8 +7,7 @@
     "start": "nodemon",
     "dev": "nodemon",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "postinstall": "prisma generate"
+    "prisma:push": "prisma db push"
   },
   "keywords": [],
   "author": "",
