@@ -1,0 +1,10 @@
+node_modules
+logs
+repos
+dist
+.env
+/src/generated
+uploads
+package-lock.json
+test*
+*.json

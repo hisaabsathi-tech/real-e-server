@@ -1,0 +1,45 @@
+services:
+  realestate:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: realestate
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - realestate
+  
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - realestate
+
+networks:
+  realestate:
+    driver: bridge
+
+volumes:
+  redis-data:

@@ -1,0 +1,374 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PropertyTypes {
+  Apartments
+  Villas
+  Townhouses
+  Penthouses
+  Lands
+  Offices
+  Mansions
+  Duplex
+  Warehouse
+  Lofts
+}
+
+enum Status {
+  Coming_Soon
+  Offplan
+  Ready_To_Move
+  Resale
+}
+
+enum Usertype {
+  AGENT
+  ADMIN
+  USER
+  UNVERIFIED
+}
+
+enum Mode {
+  OFFLINE
+  ONLINE
+}
+
+enum Timeframe {
+  MORNING
+  AFTERNOON
+  EVENING
+  ANYTIME
+}
+
+enum SellingStatus {
+  PENDING
+  FORWARDED
+  RESOLVED
+}
+
+model Collection {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id])
+  properties Property @relation(fields: [propertyId], references: [id])
+
+  @@map("collection")
+}
+
+model RequestTour {
+  id         String    @id @default(cuid())
+  userId     String
+  propertyId String
+  mode       Mode
+  date       DateTime
+  timeframe  Timeframe
+  name       String
+  email      String
+  message    String
+  link       String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("requestTour")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  image      String?
+  name       String
+  email      String    @unique
+  password   String?
+  role       Usertype  @default(USER)
+  isVerified Boolean   @default(false)
+  otp        String?
+  otpExpires DateTime?
+  phone      String?
+  address    String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  area            Area[]
+  Selling         Selling[]
+  property        Property[]
+  collection      Collection[]
+  requestTour     RequestTour[]
+  alerts          Alert[]
+  MakeOffer       MakeOffer[]
+  propertyContact PropertyContact[]
+  
+  @@map("user")
+}
+
+model Developer {
+  id          String   @id @default(cuid())
+  logo        String?
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  properties Property[]
+  community  Community[]
+
+  @@map("developer")
+}
+
+model Area {
+  id        String   @id @default(cuid())
+  image     String[]
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user        User[]
+  communities Community[]
+  properties  Property[]
+
+  @@map("area")
+}
+
+model Community {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  area       Area[]
+  properties Property[]
+  developer  Developer[] // To be connected
+
+  @@map("community")
+}
+
+model PaymentPlan {
+  id        String   @id @default(cuid())
+  name      String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  properties Property[]
+
+  @@map("paymentPlan")
+}
+
+model Property {
+  id            String   @id @default(cuid())
+  images        String[]
+  userId        String?
+  areaId        String
+  developerId   String
+  communityId   String
+  paymentPlanId String?
+
+  // details
+  name     String
+  overview String
+  status   Status
+  type     PropertyTypes
+  price    Float
+
+  // pdf files
+  brochure            String?
+  floorPlanBrochure   String?
+  paymentPlanBrochure String?
+
+  // featuring
+  isFeatured Boolean
+  isDraft    Boolean @default(false)
+
+  // location
+  lat  String
+  long String
+
+  // Property filter fields
+  // Single selection fields
+  beds  String?
+  baths String?
+
+  // Range fields (stored as strings for min/max values)
+  sqft       String?
+  lot_size   String?
+  year_built String?
+  garage     String?
+
+  // Multi-select fields (arrays)
+  property_type         String[]
+  property_status       String[]
+  popular_features      String[]
+  community_features    String[]
+  interior_features     String[]
+  parking_features      String[]
+  view                  String[]
+  heating               String[]
+  financial_information String[]
+  home_style            String[]
+  heating_features      String[]
+  property_subtypes     String[]
+  lot_features          String[]
+  pool_features         String[]
+  green_features        String[]
+  stories               String[]
+  exterior_features     String[]
+  property_features     String[]
+
+  // Dates
+  availableDates DateTime[]
+  handover       DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // Relations
+  area        Area         @relation(fields: [areaId], references: [id])
+  user        User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  developer   Developer    @relation(fields: [developerId], references: [id], onDelete: Cascade)
+  community   Community    @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  paymentPlan PaymentPlan? @relation(fields: [paymentPlanId], references: [id])
+
+  collection       Collection[]
+  requestTour      RequestTour[]
+  propertyContacts PropertyContact[]
+  MakeOffer        MakeOffer[]
+
+  @@map("properties")
+}
+
+model PropertyContact {
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String   @unique
+  name       String
+  phone      String
+  email      String
+  message    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user     User     @relation(fields: [userId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@map("propertyContact")
+}
+
+model MakeOffer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  offer     Float
+  data      Json
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("makeOffer")
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact")
+}
+
+model Selling {
+  id        String        @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  message   String
+  area      String
+  agentId   String?
+  status    SellingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  agent User? @relation(fields: [agentId], references: [id])
+
+  @@map("selling")
+}
+
+model AgentQuery {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String
+  area      String[]
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("agentQuery")
+}
+
+model Alert {
+  id     String  @id @default(cuid())
+  userId String?
+  email  String
+  name   String?
+
+  // Location criteria
+  areas       String[]
+  communities String[]
+
+  // Property criteria
+  propertyTypes  String[]
+  propertyStatus String[]
+  minPrice       Float?
+  maxPrice       Float?
+  minBeds        Int?
+  maxBeds        Int?
+  minBaths       Int?
+  maxBaths       Int?
+  minSqft        Float?
+  maxSqft        Float?
+
+  // Additional filters
+  features   String[]
+  developers String[]
+
+  isActive  Boolean   @default(true)
+  lastSent  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
