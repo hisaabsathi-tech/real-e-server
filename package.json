@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "prisma generate && tsc",
-    "start": "node dist/index.js",
+    "start": "nodemon",
     "dev": "nodemon",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
@@ -52,8 +52,10 @@
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
+    "ts-node": "^10.9.2",
+    "tsconfig": "^7.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   }
 }
