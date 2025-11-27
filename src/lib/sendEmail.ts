@@ -1,8 +1,9 @@
+import { config } from "@/config/config";
 import { transporter } from "./transporter";
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
   const mailOptions = {
-    from: process.env.SMTP_FROM,
+    from: process.env.EMAIL || config.email,
     to,
     subject,
     html,
